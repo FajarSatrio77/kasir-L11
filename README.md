@@ -110,7 +110,7 @@ http://localhost:8000
 
 ### Kredensial Default
 - **Admin**
-  - Email: admin@admin.com
+  - Email: admin@kasir.com
   - Password: Admin123
 
 - **Kasir**
