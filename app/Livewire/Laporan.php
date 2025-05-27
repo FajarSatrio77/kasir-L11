@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\Transaksi;
 use Carbon\Carbon;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class Laporan extends Component
 {
@@ -19,6 +20,11 @@ class Laporan extends Component
 
     public function mount()
     {
+        // Hanya admin, pemilik, dan kasir yang bisa mengakses laporan
+        if(!in_array(Auth::user()->peran, ['admin', 'pemilik', 'kasir'])){
+            abort(403);
+        }
+
         $this->tanggalMulai = Carbon::today()->format('Y-m-d');
         $this->tanggalAkhir = Carbon::today()->format('Y-m-d');
         $this->filterTransaksi();

@@ -12,6 +12,7 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <!-- Scripts -->
    <!-- Latest compiled and minified CSS -->
@@ -50,9 +51,14 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('laporan') }}">Laporan</a>
                             </li>
-                            @if(Auth::user()->role === 'admin')
+                            @if(Auth::user()->peran === 'admin')
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('user') }}">User</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('activity-logs.index') }}">
+                                        <i class="fas fa-history"></i> Log Aktivitas
+                                    </a>
                                 </li>
                             @endif
                         @endauth

@@ -1,5 +1,11 @@
 <div>
     <div class="container">
+        @if(Auth::user()->peran === 'admin' && ($jumlahStokHabis ?? 0) > 0)
+            <div class="alert alert-danger mt-3">
+                <i class="fas fa-exclamation-triangle"></i>
+                Ada {{ $jumlahStokHabis }} produk stok habis!
+            </div>
+        @endif
         <div class="row">
             <div class="col-12 mb-4">
                 <h2 class="text-primary">

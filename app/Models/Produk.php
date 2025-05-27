@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Produk extends Model
 {
     protected $fillable = [
-        'name', 'kode', 'harga', 'stok', 'category_id',
+        'name', 'kode', 'harga', 'stok', 'kategori_id',
         'expired_date', 'purchase_date', 'hpp',
         'harga_jual1', 'harga_jual2', 'harga_jual3', 'minimal_stok'
     ];
@@ -17,8 +17,8 @@ class Produk extends Model
         return $this->hasMany(DetailTransaksi::class);
     }
 
-    public function category()
+    public function kategori()
     {
-        return $this->belongsTo(\App\Models\Category::class, 'category_id');
+        return $this->belongsTo(Kategori::class, 'kategori_id');
     }
 }

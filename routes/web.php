@@ -7,7 +7,11 @@ use App\Livewire\Produk;
 use App\Livewire\Transaksi;
 use App\Livewire\Laporan;
 use App\Livewire\LaporanDetail;
+use App\Livewire\LaporanStok;
 use App\Livewire\Admin\CategoryManagement;
+use App\Http\Controllers\ActivityLogController;
+use App\Livewire\Cetak;
+use App\Livewire\AdminCategories;
 
 Route::get('/', function () {
     return view('welcome');
@@ -15,11 +19,25 @@ Route::get('/', function () {
 
 Auth::routes(['register' => false]);
 
-route::get('/home', Beranda::class)->middleware(['auth'])->name('home');
-route::get('/user', User::class)->middleware(['auth'])->name('user');
-route::get('/produk', Produk::class)->middleware(['auth'])->name('produk');
-route::get('/transaksi', Transaksi::class)->middleware(['auth'])->name('transaksi');
-route::get('/laporan', Laporan::class)->middleware(['auth'])->name('laporan');
-Route::get('/cetak', [App\Http\Controllers\CetakController::class, 'index'])->name('cetak');
-Route::get('/admin/categories', CategoryManagement::class)->middleware(['auth'])->name('admin.categories');
-Route::get('/laporan/{id}', LaporanDetail::class)->middleware(['auth'])->name('laporan.detail');
+// Route yang bisa diakses setelah login
+Route::middleware(['auth'])->group(function () {
+    Route::get('/home', Beranda::class)->name('home');
+    
+    // Route untuk manajemen
+    Route::get('/user', User::class)->name('user');
+    Route::get('/produk', Produk::class)->name('produk');
+    Route::get('/admin/categories', CategoryManagement::class)->name('admin.categories');
+    
+    // Route untuk transaksi
+    Route::get('/transaksi', Transaksi::class)->name('transaksi');
+    Route::get('/laporan', Laporan::class)->name('laporan');
+    Route::get('/laporan/stok', LaporanStok::class)->name('laporan.stok');
+    Route::get('/laporan/detail/{id}', LaporanDetail::class)->name('laporan.detail');
+    
+    // Route untuk cetak
+    Route::get('/cetak/laporan', Cetak::class)->name('cetak.laporan');
+    Route::get('/cetak/stok', [App\Http\Controllers\CetakController::class, 'stok'])->name('cetak.stok');
+
+    // Route untuk activity logs
+    Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
+});

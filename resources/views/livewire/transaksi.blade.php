@@ -34,15 +34,48 @@
                             </h5>
                         </div>
                         <div class="card-body">
+                            @if(auth()->user()->peran === 'pelanggan')
                             <div class="mb-3">
                                 <label class="form-label">Tipe Pelanggan</label>
-                                <select class="form-select w-auto" wire:model="tipe_pelanggan">
+                                <select class="form-select w-auto" wire:model="tipe_pelanggan" disabled>
+                                    <option value="1" {{ auth()->user()->tipe_pelanggan == '1' ? 'selected' : '' }}>Tipe 1 (Harga Jual 1)</option>
+                                    <option value="2" {{ auth()->user()->tipe_pelanggan == '2' ? 'selected' : '' }}>Tipe 2 (Harga Jual 2)</option>
+                                    <option value="3" {{ auth()->user()->tipe_pelanggan == '3' ? 'selected' : '' }}>Tipe 3 (Harga Jual 3)</option>
+                                </select>
+                            </div>
+                            @else
+                            <div class="mb-3">
+                                <label class="form-label">Tipe Pelanggan</label>
+                                <select class="form-select w-auto" wire:model="tipe_pelanggan" {{ auth()->user()->peran === 'pelanggan' ? 'disabled' : '' }}>
                                     <option value="1">Tipe 1 (Harga Jual 1)</option>
                                     <option value="2">Tipe 2 (Harga Jual 2)</option>
                                     <option value="3">Tipe 3 (Harga Jual 3)</option>
                                 </select>
                             </div>
+                            @endif
+
+                            @if(auth()->user()->peran === 'pelanggan' && auth()->user()->poin > 0)
                             <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" wire:model.live="gunakan_poin" id="gunakanPoin">
+                                    <label class="form-check-label" for="gunakanPoin">
+                                        Gunakan Poin (Tersedia: {{ number_format(auth()->user()->poin) }})
+                                    </label>
+                                </div>
+                            </div>
+                            @endif
+
+                            <div class="mb-3">
+                                <label class="form-label">Diskon (%)</label>
+                                <input type="number" class="form-control w-auto" wire:model.live="diskon_persen" min="0" max="100" step="0.01">
+                            </div>
+
+                            <div class="mb-3">
+                                @if($notifikasiStok)
+                                    <div class="alert alert-danger" role="alert">
+                                        <i class="fas fa-exclamation-circle"></i> {{ $notifikasiStok }}
+                                    </div>
+                                @endif
                                 <div class="input-group">
                                     <span class="input-group-text">
                                         <i class="fas fa-barcode"></i>
@@ -118,6 +151,35 @@
                                 <h6 class="mb-0">Total Belanja:</h6>
                                 <h4 class="mb-0 text-primary">Rp {{ number_format($totalSemuaBelanja, 0, ',', '.') }}</h4>
                             </div>
+
+                            @if($diskon_persen > 0)
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h6 class="mb-0">Diskon ({{ number_format($diskon_persen, 0) }}%):</h6>
+                                <h6 class="mb-0 text-danger">- Rp {{ number_format($diskon_nominal, 0, ',', '.') }}</h6>
+                            </div>
+                            @endif
+
+                            @if($poin_dipakai > 0)
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h6 class="mb-0">Poin Digunakan:</h6>
+                                <h6 class="mb-0 text-danger">- Rp {{ number_format($poin_dipakai, 0, ',', '.') }}</h6>
+                            </div>
+                            @endif
+
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h6 class="mb-0">Subtotal:</h6>
+                                <h6 class="mb-0">Rp {{ number_format($subtotal, 0, ',', '.') }}</h6>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="mb-0">PPN (12%):</h6>
+                                <h6 class="mb-0">Rp {{ number_format($ppn, 0, ',', '.') }}</h6>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center mb-3 border-top pt-2">
+                                <h5 class="mb-0">Total Akhir:</h5>
+                                <h4 class="mb-0 text-success">Rp {{ number_format($total_akhir, 0, ',', '.') }}</h4>
+                            </div>
                             
                             <div class="mb-3">
                                 <label class="form-label">Jumlah Bayar:</label>
@@ -135,6 +197,13 @@
                                     Rp {{ number_format($kembalian, 0, ',', '.') }}
                                 </h4>
                             </div>
+
+                            @if($poin_didapat > 0)
+                            <div class="alert alert-info mb-0">
+                                <i class="fas fa-info-circle"></i> 
+                                Poin yang didapat: {{ number_format($poin_didapat) }} poin
+                            </div>
+                            @endif
 
                             @if ($bayar)
                                 @if($kembalian < 0)

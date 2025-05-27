@@ -76,7 +76,7 @@
                         <a href="{{ route('home') }}" wire:navigate class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}">
                             <i class="fas fa-home"></i> Beranda
                         </a>
-                        @if(Auth::user()->peran=='admin')
+                        @if(in_array(Auth::user()->peran, ['admin', 'pemilik']))
                         <a href="{{ route('user') }}" wire:navigate class="nav-link {{ request()->routeIs('user') ? 'active' : '' }}">
                             <i class="fas fa-users"></i> Pengguna
                         </a>
@@ -87,12 +87,22 @@
                             <i class="fas fa-tags"></i> Kategori
                         </a>
                         @endif
+                        @if(in_array(Auth::user()->peran, ['admin', 'pemilik', 'kasir']))
                         <a href="{{ route('transaksi') }}" wire:navigate class="nav-link {{ request()->routeIs('transaksi') ? 'active' : '' }}">
                             <i class="fas fa-shopping-cart"></i> Transaksi
                         </a>
                         <a href="{{ route('laporan') }}" wire:navigate class="nav-link {{ request()->routeIs('laporan') ? 'active' : '' }}">
-                            <i class="fas fa-chart-bar"></i> Laporan
+                            <i class="fas fa-chart-line"></i> Laporan Penjualan
                         </a>
+                        <a href="{{ route('laporan.stok') }}" wire:navigate class="nav-link {{ request()->routeIs('laporan.stok') ? 'active' : '' }}">
+                            <i class="fas fa-boxes"></i> Laporan Stok
+                        </a>
+                        @endif
+                        @if(Auth::user()->peran === 'admin')
+                        <a href="{{ route('activity-logs.index') }}" wire:navigate class="nav-link {{ request()->routeIs('activity-logs.index') ? 'active' : '' }}">
+                            <i class="fas fa-history"></i> Log Aktivitas
+                        </a>
+                        @endif
                     </div>
                 </div>
             </div>

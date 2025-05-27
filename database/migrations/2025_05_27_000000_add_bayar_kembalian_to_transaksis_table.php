@@ -5,14 +5,15 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    public function up(): void
+    public function up()
     {
         Schema::table('transaksis', function (Blueprint $table) {
-            $table->integer('bayar')->nullable()->after('total');
-            $table->integer('kembalian')->nullable()->after('bayar');
+            $table->decimal('bayar', 10, 2)->default(0)->after('total_akhir');
+            $table->decimal('kembalian', 10, 2)->default(0)->after('bayar');
         });
     }
-    public function down(): void
+     
+    public function down()
     {
         Schema::table('transaksis', function (Blueprint $table) {
             $table->dropColumn(['bayar', 'kembalian']);

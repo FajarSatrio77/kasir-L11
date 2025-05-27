@@ -16,6 +16,6 @@ class LaporanDetail extends Component
 
     public function render()
     {
-        return view('livewire.laporan-detail');
+        return view('livewire.laporan-detail')->layout('layouts.print');
     }
 }

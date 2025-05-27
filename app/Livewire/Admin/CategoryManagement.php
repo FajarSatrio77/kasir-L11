@@ -6,6 +6,7 @@ use App\Models\Category;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryManagement extends Component
 {
@@ -20,6 +21,13 @@ class CategoryManagement extends Component
         'name' => 'required|min:3|max:255',
         'description' => 'nullable|max:1000'
     ];
+
+    public function mount()
+    {
+        if(!in_array(Auth::user()->peran, ['admin', 'pemilik'])){
+            abort(403);
+        }
+    }
 
     public function render()
     {

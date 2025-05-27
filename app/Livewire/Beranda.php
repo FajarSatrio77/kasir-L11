@@ -25,6 +25,9 @@ class Beranda extends Component
             ->whereDate('created_at', $today)
             ->sum('total');
             
+        // Produk dengan stok habis
+        $jumlahStokHabis = Produk::where('stok', 0)->count();
+
         // Produk dengan stok menipis (kurang dari 10)
         $totalStokMenipis = Produk::where('stok', '<', 10)->count();
         
@@ -48,6 +51,7 @@ class Beranda extends Component
             'totalTransaksiHariIni' => $totalTransaksiHariIni,
             'totalPendapatanHariIni' => $totalPendapatanHariIni,
             'totalStokMenipis' => $totalStokMenipis,
+            'jumlahStokHabis' => $jumlahStokHabis,
             'transaksiTerakhir' => $transaksiTerakhir,
             'produkTerlaris' => $produkTerlaris
         ]);

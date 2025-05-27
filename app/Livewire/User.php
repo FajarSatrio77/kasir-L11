@@ -3,12 +3,15 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\WithPagination;
 use App\Models\User as UserModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class User extends Component
 {
+    use WithPagination;
+
     public $name;
     public $email;
     public $password;
@@ -17,14 +20,21 @@ class User extends Component
     public $tipe_pelanggan;
     public $pilihanMenu = 'lihat';
     public $penggunaTerpilih;
-    public $semuaPengguna;
+    protected $paginationTheme = 'bootstrap';
 
     public function mount()
     {
-        if(Auth::user()->peran != 'admin'){
+        // Hanya admin dan pemilik yang bisa mengakses manajemen pengguna
+        if(!in_array(Auth::user()->peran, ['admin', 'pemilik'])){
             abort(403);
         }
-        $this->semuaPengguna = UserModel::all();
+    }
+
+    public function updatedPeran($value)
+    {
+        if ($value !== 'pelanggan') {
+            $this->tipe_pelanggan = null;
+        }
     }
 
     public function pilihMenu($menu)
@@ -51,18 +61,26 @@ class User extends Component
 
     public function simpan()
     {
-        $this->validate(UserModel::rules());
+        $rules = UserModel::rules();
+        if ($this->peran === 'pelanggan') {
+            $rules['tipe_pelanggan'] = 'required|in:1,2,3';
+        }
+        $this->validate($rules);
 
-        UserModel::create([
+        $data = [
             'name' => $this->name,
             'email' => $this->email,
             'password' => Hash::make($this->password),
             'peran' => $this->peran,
-            'tipe_pelanggan' => $this->peran === 'pelanggan' ? $this->tipe_pelanggan : null,
-        ]);
+        ];
+
+        if ($this->peran === 'pelanggan') {
+            $data['tipe_pelanggan'] = $this->tipe_pelanggan;
+        }
+
+        UserModel::create($data);
 
         $this->pilihMenu('lihat');
-        $this->semuaPengguna = UserModel::all();
         session()->flash('message', 'Pengguna berhasil ditambahkan.');
     }
 
@@ -70,14 +88,22 @@ class User extends Component
     {
         $rules = UserModel::rules(true);
         $rules['email'] = 'required|string|email|max:255|unique:users,email,' . $this->penggunaTerpilih->id;
+        if ($this->peran === 'pelanggan') {
+            $rules['tipe_pelanggan'] = 'required|in:1,2,3';
+        }
         $this->validate($rules);
 
         $data = [
             'name' => $this->name,
             'email' => $this->email,
             'peran' => $this->peran,
-            'tipe_pelanggan' => $this->peran === 'pelanggan' ? $this->tipe_pelanggan : null,
         ];
+
+        if ($this->peran === 'pelanggan') {
+            $data['tipe_pelanggan'] = $this->tipe_pelanggan;
+        } else {
+            $data['tipe_pelanggan'] = null;
+        }
 
         if ($this->password) {
             $data['password'] = Hash::make($this->password);
@@ -86,7 +112,6 @@ class User extends Component
         $this->penggunaTerpilih->update($data);
 
         $this->pilihMenu('lihat');
-        $this->semuaPengguna = UserModel::all();
         session()->flash('message', 'Pengguna berhasil diperbarui.');
     }
 
@@ -94,7 +119,6 @@ class User extends Component
     {
         $this->penggunaTerpilih->delete();
         $this->pilihMenu('lihat');
-        $this->semuaPengguna = UserModel::all();
         session()->flash('message', 'Pengguna berhasil dihapus.');
     }
 
@@ -105,6 +129,8 @@ class User extends Component
 
     public function render()
     {
-        return view('livewire.user');
+        return view('livewire.user', [
+            'semuaPengguna' => UserModel::latest()->paginate(10)
+        ]);
     }
 }

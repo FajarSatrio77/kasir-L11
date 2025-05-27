@@ -10,7 +10,7 @@ use App\Models\Produk;
 class detailTransaksi extends Model
 {
     use HasFactory;
-    protected $fillable = ['transaksi_id', 'produk_id', 'jumlah'];
+    protected $fillable = ['transaksi_id', 'produk_id', 'jumlah', 'harga'];
 
     public function transaksi()
     {

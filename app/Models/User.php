@@ -6,11 +6,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Traits\LogsActivity;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+
 
     /**
      * The attributes that are mass assignable.
@@ -22,7 +22,8 @@ class User extends Authenticatable
         'email',
         'password',
         'peran',
-        'tipe_pelanggan'
+        'tipe_pelanggan',
+        'poin'
     ];
 
     /**
@@ -40,21 +41,18 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
 
     public static function rules($isUpdate = false)
     {
         $rules = [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email',
-            'peran' => 'required|in:pemilik,kasir,pelanggan',
-            'tipe_pelanggan' => 'required_if:peran,pelanggan|in:1,2,3',
+            'peran' => 'required|in:admin,pemilik,kasir,pelanggan',
+            'tipe_pelanggan' => 'nullable|in:1,2,3',
         ];
 
         if (!$isUpdate) {
@@ -66,5 +64,19 @@ class User extends Authenticatable
         }
 
         return $rules;
+    }
+
+    protected function getActivityDescription($action)
+    {
+        switch ($action) {
+            case 'created':
+                return "Membuat user baru {$this->name} ({$this->email})";
+            case 'updated':
+                return "Memperbarui user {$this->name} ({$this->email})";
+            case 'deleted':
+                return "Menghapus user {$this->name} ({$this->email})";
+            default:
+                return "Melakukan aksi {$action} pada user {$this->name} ({$this->email})";
+        }
     }
 }

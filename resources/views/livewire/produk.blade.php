@@ -72,8 +72,8 @@
                                                     {{ $produk->category ? $produk->category->name : '-' }}
                                                 </span>
                                             </td>
-                                            <td>{{ \Carbon\Carbon::parse($produk->expired_date)->format('d/m/Y') }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($produk->purchase_date)->format('d/m/Y') }}</td>
+                                            <td>{{ $produk->expired_date ? \Carbon\Carbon::parse($produk->expired_date)->format('d/m/Y') : '-' }}</td>
+                                            <td>{{ $produk->purchase_date ? \Carbon\Carbon::parse($produk->purchase_date)->format('d/m/Y') : '-' }}</td>
                                             <td class="text-end">Rp {{ number_format($produk->hpp, 0, ',', '.') }}</td>
                                             <td class="text-end">Rp {{ number_format($produk->harga_jual1, 0, ',', '.') }}</td>
                                             <td class="text-end">Rp {{ number_format($produk->harga_jual2, 0, ',', '.') }}</td>

@@ -23,7 +23,7 @@ class Produk extends Component
 
     public function mount()
     {
-        if(Auth::user()->peran != 'admin'){
+        if(!in_array(Auth::user()->peran, ['admin', 'pemilik'])){
             abort(403);
         }
         $this->categories = Category::orderBy('name')->get();
@@ -54,8 +54,6 @@ public function simpanEdit()
         'kode' => 'required|unique:produks,kode,' . $this->produkTerpilih->id,
         'stok' => 'required|numeric',
         'category_id' => 'required|exists:categories,id',
-        'expired_date' => 'required|date',
-        'purchase_date' => 'required|date',
         'hpp' => 'required|numeric',
         'minimal_stok' => 'required|numeric',
     ];
@@ -111,8 +109,6 @@ public function hapus()
             'kode' => 'required|unique:produks',
             'stok' => 'required|numeric',
             'category_id' => 'required|exists:categories,id',
-            'expired_date' => 'required|date',
-            'purchase_date' => 'required|date',
             'hpp' => 'required|numeric',
             'minimal_stok' => 'required|numeric',
         ]);

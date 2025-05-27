@@ -87,6 +87,9 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div class="mt-4">
+                            {{ $semuaPengguna->links() }}
+                        </div>
                     </div>
                 </div>
                 @elseif ($pilihanMenu=='tambah')
@@ -157,8 +160,9 @@
                                         <span class="input-group-text">
                                             <i class="fas fa-user-tag"></i>
                                         </span>
-                                        <select class="form-select" wire:model="peran">
+                                        <select class="form-select" wire:model.live="peran">
                                             <option value="">Pilih Peran</option>
+                                            <option value="admin">Admin</option>
                                             <option value="pemilik">Pemilik</option>
                                             <option value="kasir">Kasir</option>
                                             <option value="pelanggan">Pelanggan</option>
@@ -251,10 +255,12 @@
                                         <span class="input-group-text">
                                             <i class="fas fa-user-tag"></i>
                                         </span>
-                                        <select class="form-select" wire:model="peran">
+                                        <select class="form-select" wire:model.live="peran">
                                             <option value="">Pilih Peran</option>
                                             <option value="admin">Admin</option>
+                                            <option value="pemilik">Pemilik</option>
                                             <option value="kasir">Kasir</option>
+                                            <option value="pelanggan">Pelanggan</option>
                                         </select>
                                     </div>
                                     @error('peran')
