@@ -185,7 +185,7 @@ Project ini dilisensikan di bawah [MIT License](LICENSE).
 
 ## 🙏 Terima Kasih
 
-Terima kasih telah menggunakan aplikasi KasirKu. Semoga aplikasi ini bermanfaat untuk bisnis Anda!
+Terima kasih telah menggunakan website KasirKu. Semoga aplikasi ini bermanfaat untuk belajar Anda!
 
 ## 🔄 Update Terakhir
 
