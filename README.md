@@ -111,11 +111,11 @@ http://localhost:8000
 ### Kredensial Default
 - **Admin**
   - Email: admin@admin.com
-  - Password: admin123
+  - Password: Admin123
 
 - **Kasir**
   - Email: kasir@kasir.com
-  - Password: kasir123
+  - Password: Kasir123
 
 ## 📁 Struktur Folder
 
